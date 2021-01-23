@@ -1,0 +1,26 @@
+{
+  "name": "miniurl",
+  "version": "1.0.0",
+  "description": "Url shorter",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CaliZam/MiniUrl.git"
+  },
+  "author": "Daniel Zamora",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/CaliZam/MiniUrl/issues"
+  },
+  "homepage": "https://github.com/CaliZam/MiniUrl#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.13",
+    "nodemon": "^2.0.7",
+    "uniqid": "^5.2.0"
+  }
+}
