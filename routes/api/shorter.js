@@ -28,8 +28,8 @@ router.post('/', (req, res) => {
         } else {
             console.log('new URL');
             const web = new URL({
-                _id: uniqid(),
                 //TODO: change the unique ID for 6 characters or 4 if is from user
+                _id: uniqid(),
                 url: urlData,
             })
             web.save((err) => {
