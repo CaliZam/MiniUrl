@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 //Path
 app.get('/', (req,res) => {
-    res.send('Home')
+    res.send('Home home')
 })
 
 //Database uri
@@ -35,7 +35,14 @@ app.use('/api/redirect', redirect);
 
 app.get('/:hash',  (req, res) => {
     const id = req.params.hash;
-    //TODO: create complete redirect
+    URL.findOne({_id: id}, (err, doc) => {
+        if(doc){
+            res.redirect('http://' + doc.url)
+        } else {
+            console.log(err);
+        }
+    })
+    
 })
 
 
