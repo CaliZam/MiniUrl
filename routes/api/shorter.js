@@ -5,6 +5,13 @@ const uniqid = require('uniqid');
 //URL model
 const URL = require('../../models/schema');
 
+//Cors Policy control  
+router.use((req,res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 //test GET
 //acces public
 router.get('/test', (req, res) => res.json({ msg: 'API is online' }));

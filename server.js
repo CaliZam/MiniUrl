@@ -3,15 +3,19 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 
-// //Models
-// const URL = require('./models/schema')
-
 //server init
 const app = express();
 
 //Middleware
 app.use(bodyParser.urlencoded ({ extended: false}));
 app.use(bodyParser.json());
+
+//cors policy control
+router.use((req,res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 //Path
 app.get('/', (req,res) => {
@@ -37,7 +41,8 @@ app.get('/:hash',  (req, res) => {
     const id = req.params.hash;
     URL.findOne({_id: id}, (err, doc) => {
         if(doc){
-            res.redirect('http://' + doc.url)
+            //TODO: include or not, http protocol
+            res.redirect(doc.url)
         } else {
             console.log(err);
         }
