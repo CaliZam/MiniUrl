@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 
 //server init
@@ -9,13 +10,7 @@ const app = express();
 //Middleware
 app.use(bodyParser.urlencoded ({ extended: false}));
 app.use(bodyParser.json());
-
-//cors policy control
-router.use((req,res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+app.use(cors())
 
 //Path
 app.get('/', (req,res) => {
@@ -34,15 +29,25 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
 const shorter = require('./routes/api/shorter');
 app.use('/api/shorter', shorter);
 
-const redirect = require('./routes/api/redirect');
-app.use('/api/redirect', redirect); 
+const retrieve = require('./routes/api/retrieve');
+app.use('/api/retrieve', retrieve); 
 
 app.get('/:hash',  (req, res) => {
+    //TODO change hash => shortcode
     const id = req.params.hash;
     URL.findOne({_id: id}, (err, doc) => {
         if(doc){
             //TODO: include or not, http protocol
-            res.redirect(doc.url)
+            console.log(`Adding 1 visit to ${doc.url}`)
+            doc.visits++
+            doc.lastVisit = Date(Date.now)
+            doc.save((err) =>{
+                if (err) {
+                    return console.error(err);
+                }
+                res.redirect(doc.url)
+            })
+            
         } else {
             console.log(err);
         }

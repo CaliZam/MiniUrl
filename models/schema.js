@@ -21,8 +21,13 @@ const urlSchema = new Schema({
         type: String
     },
 
-    visitis: {
-        type: Number
+    visits: {
+        type: Number,
+        default: 0
+    },
+
+    lastVisit: {
+        type: Date
     }
 
 });

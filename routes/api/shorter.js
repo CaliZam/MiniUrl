@@ -16,12 +16,21 @@ router.use((req,res, next) => {
 //acces public
 router.get('/test', (req, res) => res.json({ msg: 'API is online' }));
 
+
+// function generateRandomChar() {
+//     var possibleChars = "abcdegfghijkmnlopqrst0123456789";
+//     var rand = Math.random() * possibleChars.length;
+//     return possibleChars[parseInt(rand)];
+//   }
+
+
 //POST
 //access public
 router.post('/', (req, res) => {
 
     if (req.body.url) {
         urlData = req.body.url
+        userDefinedShortcode = req.body.optionalShortCode
     }
     console.log('URL is: ', urlData);
 
@@ -31,22 +40,24 @@ router.post('/', (req, res) => {
             return console.log(error)
         }
         else if (doc) {
-            console.log('URL already exist');
+            return res.send(doc);
         } else {
+            //create the shortcode using the rand method above
+            // ENSURE THIS NEW SHORTCODE DOES NOT EXIST IN THE DB
             console.log('new URL');
-            const web = new URL({
+            const webDoc = new URL({
                 //TODO: change the unique ID for 6 characters or 4 if is from user
                 _id: uniqid(),
                 url: urlData,
             })
-            web.save((err) => {
+            webDoc.save((err) => {
                 if (err) {
                     return console.error(err);
                 }
                 else {
                     res.send ({
                         url: urlData,
-                        hash: web._id,
+                        hash: webDoc._id,
                         status: 200,
                         statusResponse: 'URL created'
                     })
