@@ -3,9 +3,6 @@ const Schema = mongoose.Schema;
 
 //Create new Schema
 const urlSchema = new Schema({
-    _id: { 
-        type: String
-    },
 
     url: {
         type: String,
@@ -28,6 +25,11 @@ const urlSchema = new Schema({
 
     lastVisit: {
         type: Date
+    },
+
+    shortcode: {
+        type: String,
+        required: true
     }
 
 });

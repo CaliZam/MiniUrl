@@ -8,37 +8,36 @@ function App() {
   const [url, setUrl] = useState('');
   const [link, setLink] = useState('');
   const [hash, setHash] = useState('');
+  const [errorMessage,setErrorMessage] = useState('');
 
   const handleChange = (e) => {
+    setErrorMessage('')
     setUrl(e.target.value)
   }
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    
     const isValidUrl = validator.isURL(url, { require_protocol: true })
 
     if (!isValidUrl) {
       //TODO: feedack when exist and when is not the correct format
       alert('Please write a correct URL including the http(s) protocol')
-      } else if (isValidUrl){
-        axios.get('http://localhost:8080/api/shorter')
-          .then(doc => {
-            if (doc.url === isValidUrl) return alert(`this URl already exist with id: ${doc._id}`)
+      } else {
+        axios.get(`http://localhost:8080/api/shorter/?url=${url}`)
+          .then(doc=>{
+            setErrorMessage(`Created with code ${doc.data}`);
           })
-          .catch(err => console.log(err))
-    } else {
-      axios.post('http://localhost:8080/api/shorter', {
-        url: url
-      })
-        .then(res => {
-            //answer from server
-            setLink(`http://localhost:8080/${res.data.hash}`);
-        })
-    }
+          .catch(err => {
+            setErrorMessage(err.response.data)
+            
+          })
+    } 
   }
 
   const handleRetrieve = (e) => {
     setHash(e.target.value);
+    
   }
 
   const handleStats = (e) => {
@@ -64,14 +63,16 @@ function App() {
             onChange={handleChange}>
           </input>
           <button type='submit' form='shorter'>Shorter</button>
+          
         </fieldset>
+        {!!errorMessage &&<p>{errorMessage}</p>}
       </form>
       <div className='result'>
         <a href={link} target='blank' >{link}</a>
       </div>
       <form onSubmit={handleStats} id='retrieve'>
         <fieldset>
-          <legend>Check your Custom URL</legend>
+          <legend>Check URL Stats</legend>
           <input
             type='text' name='url' placeholder='enter your MiniUrl'
             onChange={handleRetrieve}>
@@ -79,6 +80,7 @@ function App() {
           <button type='submit' form='retrieve'>Retrieve</button>
         </fieldset>
       </form>
+      
     </div>
   </>
 }
