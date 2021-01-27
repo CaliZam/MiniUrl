@@ -23,8 +23,7 @@ router.get('/:url?', async (req, res) => {
         }
         let shortcode = generateRandomChar()
         //TODO: method to avoid duplicate codes
-        const finalShortcode = await URL.findOne({shortcode: shortcode})
-        console.log(finalShortcode);
+        // const finalShortcode = await URL.findOne({shortcode: shortcode})
         // if(!finalShortcode){}
         const resultCreate = await URL.create({url: urlQuery, shortcode: shortcode})
         if(resultCreate){

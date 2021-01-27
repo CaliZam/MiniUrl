@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const retrieve = require('./routes/api/retrieve');
 const shorter = require('./routes/api/shorter');
-const shortcode = require('./routes/api/hash');
+const shortcode = require('./routes/api/shortcode');
 require('dotenv/config');
 const {env:{PORT,MONGODB_URL}} = process;
 

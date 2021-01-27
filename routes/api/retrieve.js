@@ -10,10 +10,9 @@ router.get('/test', (req,res) => res.json({ msg: "Retrieve API is working"}));
 
 //retrieve
 router.get('/', (req,res) => {
-    //TODO change hash => shortcode
-    const hash = req.params.hash;
+    const shortcode = req.params.shortcode;
    
-    URL.findOne({ _id: hash})
+    URL.findOne({ _id: shortcode})
         .then((doc) => {
             return res.json(doc)
         })

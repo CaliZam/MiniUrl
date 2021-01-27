@@ -7,8 +7,8 @@ function App() {
 
   const [url, setUrl] = useState('');
   const [link, setLink] = useState('');
-  const [hash, setHash] = useState('');
-  const [errorMessage,setErrorMessage] = useState('');
+  const [shortcode, setshortcode] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     setErrorMessage('')
@@ -17,37 +17,37 @@ function App() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    
+
     const isValidUrl = validator.isURL(url, { require_protocol: true })
 
     if (!isValidUrl) {
       //TODO: feedack when exist and when is not the correct format
       alert('Please write a correct URL including the http(s) protocol')
-      } else {
-        axios.get(`http://localhost:8080/api/shorter/?url=${url}`)
-          .then(doc=>{
-            setErrorMessage(`Created with code ${doc.data}`);
-          })
-          .catch(err => {
-            setErrorMessage(err.response.data)
-            
-          })
-    } 
+    } else {
+      axios.get(`http://localhost:8080/api/shorter/?url=${url}`)
+        .then(doc => {
+          setErrorMessage(`Created with code ${doc.data}`);
+          setLink(`http://localhost:8080/${doc.data}`)
+        })
+        .catch(err => {
+          setErrorMessage(err.response.data)
+        })
+    }
   }
 
   const handleRetrieve = (e) => {
-    setHash(e.target.value);
-    
+    setshortcode(e.target.value);
+
   }
 
   const handleStats = (e) => {
     e.preventDefault();
-    const isValidHash = hash.match(/^\s*(?:\S\s*){1,20}$/);
+    const isValidshortcode = shortcode.match(/^\s*(?:\S\s*){1,20}$/);
 
-    if (!isValidHash) {
-      alert('The hash is not correct');
+    if (!isValidshortcode) {
+      alert('The shortcode is not correct');
     } else {
-      axios.get(`http://localhost:8080/${hash}`)
+      axios.get(`http://localhost:8080/${shortcode}`)
         .then(doc => console.log(doc))
         .catch(err => console.log(err))
     }
@@ -63,13 +63,13 @@ function App() {
             onChange={handleChange}>
           </input>
           <button type='submit' form='shorter'>Shorter</button>
-          
+        {!!errorMessage && <p>{errorMessage}</p>}
+        {link && <div className='result'>
+          <strong>Click to redirect:</strong><br></br>
+          <a href={link} target='blank' >{link}</a>
+        </div>}
         </fieldset>
-        {!!errorMessage &&<p>{errorMessage}</p>}
       </form>
-      <div className='result'>
-        <a href={link} target='blank' >{link}</a>
-      </div>
       <form onSubmit={handleStats} id='retrieve'>
         <fieldset>
           <legend>Check URL Stats</legend>
@@ -80,7 +80,7 @@ function App() {
           <button type='submit' form='retrieve'>Retrieve</button>
         </fieldset>
       </form>
-      
+
     </div>
   </>
 }

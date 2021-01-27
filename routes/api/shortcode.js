@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 
-router.get('/:hash',  (req, res) => {
-    //TODO change hash => shortcode
-    const id = req.params.hash;
-    URL.findOne({shortcode: shortcode}, (err, doc) => {
+router.get('/:shortcode',  (req, res) => {
+    const id = req.params.shortcode;
+    URL.findOne({shortcode: id}, (err, doc) => {
         if(doc){
             //TODO: include or not, http protocol
             console.log(`Adding 1 visit to ${doc.url}`)

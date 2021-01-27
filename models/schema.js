@@ -14,10 +14,6 @@ const urlSchema = new Schema({
         default: Date.now
     },
 
-    hash: {
-        type: String
-    },
-
     visits: {
         type: Number,
         default: 0
