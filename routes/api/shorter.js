@@ -9,9 +9,6 @@ const URL = require('../../models/schema');
 //acces public
 router.get('/test', (req, res) => res.json({ msg: 'API is online' }));
 
-
-
-
 //POST
 //access public
 router.get('/:url?', async (req, res) => {
@@ -22,9 +19,6 @@ router.get('/:url?', async (req, res) => {
             throw new Error(`This ${urlQuery} alredy exist! with code: ${result.shortcode}`)
         }
         let shortcode = generateRandomChar()
-        //TODO: method to avoid duplicate codes
-        // const finalShortcode = await URL.findOne({shortcode: shortcode})
-        // if(!finalShortcode){}
         const resultCreate = await URL.create({url: urlQuery, shortcode: shortcode})
         if(resultCreate){
             res.status(201).send(resultCreate.shortcode)
