@@ -8,13 +8,14 @@ import {BrowserRouter as Router, Switch,Route} from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
-
+    <div className='box'>
     <Router>
       <Switch>
         <Route exact path={'/'} component={App} />
         <Route exact path={'/:shortcode/stats'} component={Stats} />
       </Switch>
     </Router>
+    </div>
   </React.StrictMode>,
   document.getElementById('root')
 );

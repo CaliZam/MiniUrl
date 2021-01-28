@@ -9,13 +9,13 @@ router.get('/test', (req, res) => res.json({ msg: "Retrieve API is working" }));
 
 
 //retrieve
-router.get('/:shortcode?/stats', (req, res) => {
+router.get('/:shortcode?', (req, res) => {
     try {
         const id = req.params.shortcode;
-
+        console.log("este es el ID " + id);
          URL.findOne({ shortcode: id })
             .then((doc) => {
-                console.log(doc);
+                console.log('este es el doc de back ' + doc);
                 return res.json(doc)
             })
             .catch(err => {
