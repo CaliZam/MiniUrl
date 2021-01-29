@@ -21,7 +21,6 @@ router.get('/:url?', async (req, res) => {
         let shortcode = generateRandomChar()
         const resultCreate = await URL.create({url: urlQuery, shortcode: shortcode})
         if(resultCreate){
-            console.log('resultado sin custom' + resultCreate);
             res.status(201).send(resultCreate.shortcode)
         }
     }catch(error){
@@ -34,18 +33,21 @@ router.post('/:url?', async (req, res) => {
     try {
         const customCode = req.body.code
         const urlQuery = req.query.url
+        let customCodeCheck = customCode.match(/[a-zA-Z0-9]{4,20}/g)
+        
+        if(!customCodeCheck) throw new Error('the code has to conatain at least 4 characters')
+        
         const [codeResult] = await URL.find({ shortcode: customCode })
         if (codeResult) {
             throw new Error(`This code alredy exist! for url: ${codeResult.url}`)
         }
         const [urlResult] = await URL.find({ url: urlQuery })
         if (urlResult) {
-            throw new Error(`This ${urlQuery} alredy exist! with code: ${result.shortcode}`)
+            throw new Error(`This ${urlQuery} alredy exist! with code: ${urlResult.shortcode}`)
         }
         const resultCreate = await URL.create({url: urlQuery, shortcode: customCode})
         if (resultCreate) {
             res.status(201).send({url, shortcode} = resultCreate)
-            console.log('resultado ' + resultCreate);
         }
     } catch (error) {
         res.status(400).send(error.message)

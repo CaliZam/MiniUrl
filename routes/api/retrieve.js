@@ -9,21 +9,22 @@ router.get('/test', (req, res) => res.json({ msg: "Retrieve API is working" }));
 
 
 //retrieve
-router.get('/:shortcode?', (req, res) => {
+router.get('/:shortcode?', async (req, res) => {
     try {
         const id = req.params.shortcode;
-        console.log("este es el ID " + id);
-         URL.findOne({ shortcode: id })
-            .then((doc) => {
-                console.log('este es el doc de back ' + doc);
-                return res.json(doc)
-            })
-            .catch(err => {
-                return res.status(400).json({ error: 'Something went wrong' })
-            })
-    }
-    catch {
 
+        let customCodeCheck = id.match(/[a-zA-Z0-9]{4,20}/g)
+        if (!customCodeCheck) throw new Error('the code has to conatain at least 4 characters');
+
+        const foundShortcode = await URL.findOne({ shortcode: id })
+        if (!foundShortcode) {
+            throw new Error(`Any url with code ${id} was found`)
+        } else {
+            return res.json(foundShortcode)
+        }
+    }
+    catch (error) {
+        res.status(400).send(error.message)
     }
 
 })

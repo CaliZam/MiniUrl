@@ -6,7 +6,6 @@ router.get('/:shortcode',  (req, res) => {
     const id = req.params.shortcode;
     URL.findOne({shortcode: id}, (err, doc) => {
         if(doc){
-            console.log(`Adding 1 visit to ${doc.url}`)
             doc.visits++
             doc.lastVisit = Date(Date.now)
             doc.save((err) =>{

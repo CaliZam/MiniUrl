@@ -6,7 +6,10 @@
   "scripts": {
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "npx mocha *.spec.js",
+    "test:debug": "npx mocha debug *.spec.js",
+    "test:coverage": "npx nyc --reporter=text --reporter=lcov npm test"
   },
   "repository": {
     "type": "git",
@@ -20,12 +23,15 @@
   "homepage": "https://github.com/CaliZam/MiniUrl#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "concurrently": "^5.3.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.11.13",
     "nodemon": "^2.0.7",
-    "uniqid": "^5.2.0"
+    "nyc": "^15.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
   }
 }

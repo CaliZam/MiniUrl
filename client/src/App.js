@@ -28,10 +28,14 @@ function App() {
     e.preventDefault();
 
     const isValidUrl = validator.isURL(url, { require_protocol: true })
-
+    let customCodeCheck = customLink.match(/[a-zA-Z0-9]{4,20}/g)
+   
     if (!isValidUrl) {
-      alert('Please write a correct URL including the http(s) protocol')
+      return alert('Please write a correct URL including the http(s) protocol')
     } else if (isValidUrl && customLink) {
+      if (!customCodeCheck) {
+        return alert('the code has to conatain at least 4 characters')
+      }
       axios.post(`http://localhost:8080/api/shorter/?url=${url}`, { code: customLink })
         .then(doc => {
           setErrorMessage(`Created with code ${doc.data.shortcode}`);
@@ -45,6 +49,7 @@ function App() {
         .then(doc => {
           setErrorMessage(`Created with code ${doc.data}`);
           setLink(`http://localhost:8080/${doc.data}`)
+          console.log(doc.data);
         })
         .catch(err => {
           setErrorMessage(err.response.data)
@@ -60,18 +65,21 @@ function App() {
 
   const handleStats = (e) => {
     e.preventDefault();
-    const isValidshortcode = shortcodeToCheck.match(/^\s*(?:\S\s*){4,20}$/);
+    
+    const isValidshortcode = shortcodeToCheck.match(/[a-zA-Z0-9]{4,20}/g);
 
     if (!isValidshortcode) {
-      alert('The shortcode is not correct');
+      return alert('The shortcode is not correct');
     } else {
 
       axios.get(`http://localhost:8080/api/retrieve/${shortcodeToCheck}`)
         .then(doc => {
           const { url, visits, shortcode, lastVisit, created } = doc.data
-          history.push({ pathname: `/${shortcodeToCheck}/stats`, data: { url, visits, shortcode, lastVisit, created } });
+          history.push({ pathname: `/${shortcodeToCheck}/stats`, data: { url, visits, shortcode, lastVisit, created} });
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          setErrorMessage(err.response.data)
+        })
     }
   }
 
@@ -94,12 +102,12 @@ function App() {
           </input><br></br><br></br>
           <button type='submit' form='shorter'>Shorter</button>
 
-          {!!errorMessage && <p>{errorMessage}</p>}
           {link && <div className='result'>
             <strong>Click to redirect:</strong><br></br>
             <a href={link} target='blank' >{link}</a>
           </div>}
         </fieldset>
+          {!!errorMessage && <p>{errorMessage}</p>}
       </form>
       <form onSubmit={handleStats} id='retrieve'>
         <fieldset>
