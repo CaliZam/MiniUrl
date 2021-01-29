@@ -1,44 +1,32 @@
-const express = require('express');
+const app = require('express')();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const retrieve = require('./routes/api/retrieve');
+const shorter = require('./routes/api/shorter');
+const shortcode = require('./routes/api/shortcode');
+require('dotenv/config');
+const {env:{PORT,MONGODB_URL}} = process;
 
 
-// //Models
-// const URL = require('./models/schema')
-
-//server init
-const app = express();
-
-//Middleware
-app.use(bodyParser.urlencoded ({ extended: false}));
-app.use(bodyParser.json());
-
-//Path
-app.get('/', (req,res) => {
-    res.send('Home')
-})
-
-//Database uri
-const db = require('./config/uri').mongoURI;
 
 //Conect DB
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then( () => console.log('MongoDB on'))
-    .catch(err => console.log(err)); 
-
-//Endpoints
-const shorter = require('./routes/api/shorter');
-app.use('/api/shorter', shorter);
-
-const redirect = require('./routes/api/redirect');
-app.use('/api/redirect', redirect); 
-
-app.get('/:hash',  (req, res) => {
-    const id = req.params.hash;
-    //TODO: create complete redirect
-})
-
-
-//Port
-const port = process.env.PORT || 8080;
-app.listen(port, () => console.log(`Server runing on port ${port}`));
+console.info('Conecting...')
+mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => {
+    console.log('Conected with mongoDB')
+    app.use(cors())
+    app.use(bodyParser.urlencoded ({ extended: false}));
+    app.use(bodyParser.json());
+    
+    //Call routes
+    app.use('/', shortcode); 
+    app.use('/api/shorter', shorter);
+    app.use('/api/retrieve', retrieve); 
+    
+    app.listen(PORT, () => console.log(`Server runing on port ${PORT}`));
+    })
+    .catch(err => {
+        console.error('Error conecting dataBase', err.message)
+    })
+       
