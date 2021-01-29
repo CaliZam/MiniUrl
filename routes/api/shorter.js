@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const uniqid = require('uniqid');
 const generateRandomChar = require('../../utils/generator-random')
 //URL model
 const URL = require('../../models/schema');
@@ -34,7 +33,7 @@ router.post('/:url?', async (req, res) => {
         const customCode = req.body.code
         const urlQuery = req.query.url
         let customCodeCheck = customCode.match(/[a-zA-Z0-9]{4,20}/g)
-        
+
         if(!customCodeCheck) throw new Error('the code has to conatain at least 4 characters')
         
         const [codeResult] = await URL.find({ shortcode: customCode })
